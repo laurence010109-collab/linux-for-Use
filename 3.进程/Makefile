@@ -25,3 +25,13 @@ waitpid_test:waitpid_test.c
 	-$(CC) -o $@ $^
 	-./$@
 	-rm ./$@
+
+perror_test:perror_test.c
+	-$(CC) -o $@ $^
+	-./$@
+	-rm ./$@
+
+errno_test:errno_test.c
+	-$(CC) -o $@ $^
+	-./$@
+	-rm ./$@
