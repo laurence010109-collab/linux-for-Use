@@ -20,3 +20,8 @@ fork_execve_test:fork_execve_test.c
 	-$(CC) -o $@ $^
 	-./$@
 	-rm ./$@
+
+waitpid_test:waitpid_test.c
+	-$(CC) -o $@ $^
+	-./$@
+	-rm ./$@

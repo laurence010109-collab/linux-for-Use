@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
         char*newname="新学员";
         char*args[]={"/media/tssh/data/laurence/linux应用/code/3.进程/erlou",newname,NULL};
         char*envs[]={NULL};
-        int env=execve(argv[0],args,envs);
+        int env=execve(args[0],args,envs);
         if(env==-1)
         {
             perror("execve error");
