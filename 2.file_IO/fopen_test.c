@@ -15,4 +15,15 @@ int main()
     FILE *fopen (const char *__restrict __filename,
             const char *__restrict __modes)
     */
+     char *filename="io1.txt";
+     FILE *ioFile = fopen(filename,"a");
+     if(ioFile==NULL)
+     {
+         printf("open file %s failed\n",filename);
+     }
+     else
+     {
+         printf("open file %s success\n",filename);
+     }
+     return 0;
 }
