@@ -2,7 +2,7 @@
 
 int main()
 {
-    fopen("buzhidao.txt","r");
-    perror("file open");
+    open("nihao.txt","r");
+    perror("open nihao.txt");
     return 0;
 }

@@ -26,12 +26,7 @@ waitpid_test:waitpid_test.c
 	-./$@
 	-rm ./$@
 
-perror_test:perror_test.c
+unnamed_pipe_test:unnamed_pipe_test.c
 	-$(CC) -o $@ $^
-	-./$@
-	-rm ./$@
-
-errno_test:errno_test.c
-	-$(CC) -o $@ $^
-	-./$@
+	-./$@ "hello world"
 	-rm ./$@

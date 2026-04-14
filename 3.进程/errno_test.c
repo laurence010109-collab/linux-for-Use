@@ -1,11 +1,11 @@
-#include<errno.h>
 #include<stdio.h>
+#include<errno.h>
 
 int main()
 {
-    fopen("/opt","a+");
-    printf("errno:%d",errno);
-    perror("errno_file open");
+    open("/opt","a+");
+    printf("errno: %d\n", errno);
+    perror("open");
     return 0;
-
+    
 }
