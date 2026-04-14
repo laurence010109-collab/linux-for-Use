@@ -19,7 +19,7 @@ int main()
     fprintf (FILE *__restrict __stream, const char *__restrict __fmt, ...)
     */
     char*name="laurence";
-    int printfR=fprintf(IOfile,"good morning \ngessis\t%s",name);
+    int printfR=fprintf(IOfile,"good morning \n gessis\t%s",name);
     if(printfR==EOF) printf("fprintf失败\n");
     else printf("fprintf成功: %d\n",printfR);
 

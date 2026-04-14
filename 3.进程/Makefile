@@ -25,3 +25,8 @@ waitpid_test:waitpid_test.c
 	-$(CC) -o $@ $^
 	-./$@
 	-rm ./$@
+
+unnamed_pipe_test:unnamed_pipe_test.c
+	-$(CC) -o $@ $^
+	-./$@ "hello world"
+	-rm ./$@
