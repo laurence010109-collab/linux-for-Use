@@ -30,3 +30,10 @@ unnamed_pipe_test:unnamed_pipe_test.c
 	-$(CC) -o $@ $^
 	-./$@ "hello world"
 	-rm ./$@
+
+fifo_write:fifo_write.c
+	-$(CC) -o $@ $^
+
+fifo_read:fifo_read.c
+	-$(CC) -o $@ $^
+
