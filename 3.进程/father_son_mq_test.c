@@ -6,8 +6,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-int main(int argc, char **argv)
+#include <sys/wait.h>
+int main(int argc, char *argv[])
 {
 
     struct mq_attr attr;//属性队列属性结构体
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     attr.mq_msgsize=100;//单条消息的最大允许大小，以字节为单位
     attr.mq_curmsgs=0;//当前队列中的消息数量，对于mq_open，忽略它
     char* mq_name="/father_son_mq";
-    mqd_t mqdes=mq_open(mq_name,O_RDWR|O_CREAT,0664,attr);
+    mqd_t mqdes=mq_open(mq_name,O_RDWR|O_CREAT,0664,&attr);
     if(mqdes==(mqd_t)-1)
     {
         perror("mq_open");
@@ -38,16 +38,16 @@ int main(int argc, char **argv)
         for(int i=0;i<10;i++)
         {
             memset(read_buf,0,sizeof(read_buf));
-            sprintf(read_buf,"子进程接收第%d条消息",i+1);
             clock_gettime(0,&time_info);
             time_info.tv_sec+=15;//设置绝对时间节点为当前时间的5秒后
-        }
+        
 
-        if(mq_timedreceive(mqdes,read_buf,sizeof(read_buf),NULL,&time_info)==-1)
-        {
-            perror("mq_timedreceive");
+            if(mq_timedreceive(mqdes,read_buf,sizeof(read_buf),NULL,&time_info)==-1)
+            {
+                perror("mq_timedreceive");
+            }
+            printf("子进程接收消息:%s\n", read_buf);
         }
-        printf("子进程接收消息:%s\n", read_buf);
     }
     else
     {
@@ -58,18 +58,18 @@ int main(int argc, char **argv)
         for(int i=0;i<10;i++)
         {
             memset(send_buf,0,sizeof(send_buf));
-            sprintf(send_buf,"父进程给儿子发送第%d条消息",i+1);
+            sprintf(send_buf,"父进程给儿子发送第%d条消息\n",i+1);
             clock_gettime(0,&time_info);
             time_info.tv_sec+=5;//设置绝对时间节点为当前时间的5秒后
-        }
+        
 
-        if(mq_timedsend(mqdes,send_buf,strlen(send_buf),0,&time_info)==-1)
-        {
-            perror("mq_timedsend");
+            if(mq_timedsend(mqdes,send_buf,strlen(send_buf),0,&time_info)==-1)
+            {
+                perror("mq_timedsend");
+            }
+            printf("父进程发送消息成功\n");
+            sleep(1);//等待子进程结束
         }
-        printf("父进程发送消息成功\n");
-        sleep(1);
-       
     }
     close(mqdes);//关闭队列描述符
     if(pid>0)
