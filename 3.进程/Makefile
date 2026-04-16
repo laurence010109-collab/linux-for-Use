@@ -46,3 +46,8 @@ shared_memory_block:shared_memory_block.c
 	-$(CC) -o $@ $^
 	-./$@
 	-rm ./$@
+
+father_son_mq_test:father_son_mq_test.c
+	-$(CC) -o $@ $^
+	-./$@
+	-rm ./$@
