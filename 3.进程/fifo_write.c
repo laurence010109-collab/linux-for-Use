@@ -13,8 +13,11 @@ int main(int argc, char *argv[])
     if(mkfifo(fifo_path, 0666)!=0)
     {
         perror("mkfifo");
-        exit(EXIT_FAILURE);
-
+        if(errno!=17)
+        {
+            printf("不是文件已经存在的错误\n");
+            exit(EXIT_FAILURE);
+        }
     }
     fd=open(fifo_path, O_WRONLY);
     if(fd==-1)
@@ -37,6 +40,12 @@ int main(int argc, char *argv[])
     }
     printf("写入完成\n");
     close(fd);
+    if(unlink(fifo_path)==-1)
+    {
+        perror("unlink");
+    }
+
     return 0;
+   
     
 }

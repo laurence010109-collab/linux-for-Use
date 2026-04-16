@@ -42,3 +42,22 @@ ssize_t write (int __fd, const void *__buf, size_t __n);
             (2) 失败时 返回-1
 */
 int close (int __fd);
+
+
+/**
+ * @brief 从文件系统中清除一个名称及其链接的文件
+ * 
+ * @param pathname 文件路径
+ * @return int 成功返回0，失败返回-1，并设置errno
+ */
+int unlink(const char *pathname);
+
+
+/**
+ * @brief 将源字符串复制到目标缓冲区中（连同结束符 '\0' 一起复制）
+ * * char *dest 目标缓冲区的指针，必须指向一块足够大且可写的内存
+ * @param src 源字符串的指针，必须以 '\0' 结尾
+ * @return char* 永远返回指向目标缓冲区 dest 的起始地址指针
+ */
+char *strcpy(char *dest, const char *src);
+
