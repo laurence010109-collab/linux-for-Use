@@ -42,3 +42,26 @@ ssize_t write (int __fd, const void *__buf, size_t __n);
             (2) 失败时 返回-1
 */
 int close (int __fd);
+
+/** * @brief 将格式化的数据写入字符串缓冲区
+ * * @param str 指向用于存储生成的 C 字符串的缓冲区指针
+ * @param format 包含格式说明符的字符串（如 %d, %s 等）
+ * @param ... 根据 format 字符串所需的附加参数
+ * * @return int 成功时返回写入的字符总数（不包括终止符 '\0'），失败返回负值
+ */ 
+int sprintf(char *str, const char *format, ...);
+
+
+/**
+ * const char *name: 这是共享内存对象的名称，直接写一个文件名称，本身会保存在 /dev/shm 。名称必须是唯一的，以便不同进程可以定位同一个共享内存段。
+ * 命名规则：必须是以正斜杠/开头，以\0结尾的字符串，中间可以包含若干字符，但不能有正斜杠
+ * int oflag: 打开模式 二进制可拼接
+ *      (1) O_CREAT：如果不存在则创建新的共享内存对象
+ *      (2) O_EXCL：当与 O_CREAT 一起使用时，如果共享内存对象已经存在，则返回错误（避免覆盖现有对象）
+ *      (3) O_RDONLY：以只读方式打开
+ *      (4) O_RDWR：以读写方式打开
+ *      (5) O_TRUNC 用于截断现有对象至0长度（只有在打开模式中包含 O_RDWR 时才有效）。
+ * mode_t mode: 当创建新共享内存对象时使用的权限位，类似于文件的权限模式,一般0644即可
+ * return: 成功执行,它将返回一个新的描述符;发生错误,返回值为 -1
+*/
+int shm_open(const char *name, int oflag, mode_t mode);
