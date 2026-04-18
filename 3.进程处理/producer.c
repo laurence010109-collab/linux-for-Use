@@ -1,9 +1,11 @@
-#include <time.h>
-#include <mqueue.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
+#include <time.h>   // clock_gettime struct timespec
+#include <mqueue.h> // mq_open mq_timedsend mq_timedreceive mq_close mq_unlink
+#include <stdio.h>  // perror printf
+#include <unistd.h> // read STDIN_FILENO
+#include <stdlib.h> // exit EXIT_FAILURE
+#include <string.h> 
+#include<fcntl.h> // O_CREAT O_RDWR O_RDONLY O_NONBLOCK
+#include<sys/stat.h> // mode_t
 
 int main()
 {
@@ -11,7 +13,7 @@ int main()
     attr.mq_flags=0;//标记，默认值为0
     attr.mq_maxmsg=10;//队列可以容纳的消息的最大数量
     attr.mq_curmsgs=0;
-    attr.mq_msgsize=10;
+    attr.mq_msgsize=100;
     char* mq_name="/p_c_mq";
     mqd_t mqdes=mq_open(mq_name,O_RDWR|O_CREAT,0664,&attr);
     if(mqdes==(mqd_t)-1)
@@ -23,7 +25,7 @@ int main()
     struct timespec time_info;
     while(1)
     {
-        clock_gettime(0,&time_info)
+        clock_gettime(0,&time_info);
         time_info.tv_sec+=5;//设置绝对时间节点为当前时间的5秒后
         memset(writebuf,0,sizeof(writebuf));
         ssize_t read_number=read(STDIN_FILENO,writebuf,sizeof(writebuf));
@@ -36,6 +38,7 @@ int main()
         {
             printf("read EOF\n");
             char eof=EOF;
+            //当生产者端读到EOF时，向消息队列发送一个特殊的消息，通知消费者端退出
             if(mq_timedsend(mqdes,&eof,sizeof(eof),0,&time_info)==-1)
             {
                 perror("mq_timedsend");
