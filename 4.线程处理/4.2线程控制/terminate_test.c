@@ -7,7 +7,7 @@
 typedef struct Result
 {
     char* speak;
-    char* speak_len;
+    char speak_len;
 }Result;
 
 void* red_thread(void* arg)
@@ -19,7 +19,8 @@ void* red_thread(void* arg)
     {   
         fgets(ans,100,stdin);//从标准输入读取一行文本，存储在ans中，最多读取99个字符（最后一个字符用于存储字符串结束符'\0'）
         if(ans[0]==code)
-        {
+        {   
+            // printf("%s\n",ans);
             free(ans);//释放内存，防止内存泄漏
             printf("红玫瑰离开了!\n");
             
@@ -45,6 +46,7 @@ void* white_thread(void* arg)
         fgets(ans,100,stdin);
         if(ans[0]==code)
         {
+            // printf("%s\n",ans);
             free(ans);
             printf("白玫瑰离开了!\n");
             char* whiteres=strdup("白玫瑰独自去了伦敦.\n");
