@@ -240,3 +240,19 @@ void pthread_exit(void *retval);
  *              失败 1
  */
 int pthread_join(pthread_t thread, void **retval);
+
+
+
+/**
+ * @brief 向目标线程发送取消请求。目标线程是否和何时响应取决于它的取消状态和类型
+ *  取消状态（Cancelability State）：可以是enabled（默认）或disabled。如果取消状态为禁用，则取消请求会被挂起，直至线程启用取消功能。如果取消状态为启用，则线程的取消类型决定它何时取消。
+ *  取消类型（Cancelability Type）：可以是asynchronous（异步）或deferred（被推迟，默认值）。
+ *      asynchronous：意味着线程可能在任何时候被取消（通常立即被取消，但系统并不保证这一点）
+ *      deferred：被推迟意味着取消请求会被挂起，直至被取消的线程执行取消点（cancellation point）函数时才会真正执行线程的取消操作。
+ *      取消点函数：是在POSIX线程库中专门设计用于检查和处理取消请求的函数。当被取消的线程执行这些函数时，如果线程的取消状态是enabled且类型是deferred，则它会立即响应取消请求并终止执行。man 7 pthreads可以看到取消点函数列表。
+ * 
+ * @param thread 目标线程，即被取消的线程
+ * @return int 成功返回0，失败返回非零的错误码
+ *      需要注意的是，取消操作和pthread_cancel函数的调用是异步的，这个函数的返回值只能告诉调用者取消请求是否成功发送。当线程被成功取消后，通过pthread_join和线程关联将会获得PTHREAD_CANCELED作为返回信息，这是判断取消是否完成的唯一方式
+ */
+int pthread_cancel(pthread_t thread);
