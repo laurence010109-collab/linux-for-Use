@@ -6,10 +6,12 @@
 void* pthread_test(void* arg)
 {
     printf("这是一个线程!\n");
-    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);//设置线程取消状态为不可取消,当线程执行到这里时,即使有取消请求,线程也不会被取消,线程会继续执行下去
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
+    //设置线程取消状态为不可取消,当线程执行到这里时,即使有取消请求,线程也不会被取消,线程会继续执行下去
     printf("disable cancel\n");
 
-    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED,NULL);//设置线程取消类型为延迟取消,当线程执行到这里时,如果有取消请求,线程不会被立即取消,而是等到线程执行到一个取消点时才会被取消;如果没有取消请求,线程会继续执行下去
+    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED,NULL);
+    //设置线程取消类型为延迟取消,当线程执行到这里时,如果有取消请求,线程不会被立即取消,而是等到线程执行到一个取消点时才会被取消;如果没有取消请求,线程会继续执行下去
     printf("working...\n");
     sleep(1); // 模拟线程执行的时间
     printf("线程执行结束了!\n");
