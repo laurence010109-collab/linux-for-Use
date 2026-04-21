@@ -11,35 +11,39 @@ static pthread_mutex_t mutex=PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond=PTHREAD_COND_INITIALIZER;
 
 void* producer(void* arg)
-{   int item=0;
+{   
+    int item=0;
+    pthread_mutex_lock(&mutex);
     while(1)
     {   
-        
-        pthread_mutex_lock(&mutex);
         while(count==BUFFER_SIZE)
         {
             pthread_cond_wait(&cond,&mutex);
+            
         }
         buffer[count++]=item++;
         printf("Produced: %d\n",buffer[count-1]);
         pthread_cond_signal(&cond);
-        pthread_mutex_unlock(&mutex);
+        
     }
+    pthread_mutex_unlock(&mutex);
 }
 
 void* consumer(void* arg)
-{
+{   
+    pthread_mutex_lock(&mutex);
     while(1)
     {
-        pthread_mutex_lock(&mutex);
         while(count==0)
         {
             pthread_cond_wait(&cond,&mutex);
+            
         }
         printf("Consumed: %d\n",buffer[--count]);
         pthread_cond_signal(&cond);
-        pthread_mutex_unlock(&mutex);
+        
     }
+    pthread_mutex_unlock(&mutex);
 }
 
 int main()
