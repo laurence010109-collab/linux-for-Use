@@ -12,6 +12,7 @@ void* read_thread(void*arg)
     //printf("%s try to read shared_data\n",(char*)arg);
     pthread_rwlock_rdlock(&rwlock);
     printf("%s read shared_data=%d\n",(char*)arg,shared_data);
+    sleep(1);
     pthread_rwlock_unlock(&rwlock);
     //printf("%s finish read shared_data\n",(char*)arg);
     return (void*)0;

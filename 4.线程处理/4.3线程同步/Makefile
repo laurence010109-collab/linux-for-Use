@@ -25,3 +25,14 @@ rwlock_rw_alternate:rwlock_rw_alternate.c
 	-$(CC) -o $@ $^ -lpthread
 	-./$@
 	-rm ./$@
+
+
+rwlock_write_hungry:rwlock_write_hungry.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+rwlock_hungry_solved:rwlock_hungry_solved.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@

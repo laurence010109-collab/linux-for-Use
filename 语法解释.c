@@ -256,3 +256,38 @@ int pthread_join(pthread_t thread, void **retval);
  *      需要注意的是，取消操作和pthread_cancel函数的调用是异步的，这个函数的返回值只能告诉调用者取消请求是否成功发送。当线程被成功取消后，通过pthread_join和线程关联将会获得PTHREAD_CANCELED作为返回信息，这是判断取消是否完成的唯一方式
  */
 int pthread_cancel(pthread_t thread);
+
+
+
+/**
+ * @brief 为rwlock指向的读写锁分配所有需要的资源，并将锁初始化为未锁定状态。读写锁的属性由attr参数指定，如果attr为NULL，则使用默认属性。当锁的属性为默认时，可以通过宏PTHREAD_RWLOCK_INITIALIZER初始化，即
+ * pthread_rwlock_t rwlock = PTHREAD_RWLOCK_INITIALIZER; 效果和调用当前方法并为attr传入NULL是一样的
+ * 
+ * @param rwlock 读写锁
+ * @param attr 读写锁的属性
+ * @return int 成功则返回0，否则返回错误码
+ */
+int pthread_rwlock_init(pthread_rwlock_t *restrict rwlock, const pthread_rwlockattr_t *restrict attr);
+
+
+/**
+ * @brief 用所有属性的默认值初始化attr指向的属性对象
+ * 
+ * @param attr 读写锁属性对象指针
+ * @return int 成功返回0，失败返回错误码
+ */
+int pthread_rwlockattr_init(pthread_rwlockattr_t *attr);
+
+
+
+/**
+ * @brief 将attr指向的属性对象中的"锁类型"属性设置为pref规定的值
+ * 
+ * @param attr 读写锁属性对象指针
+ * @param pref 希望设置的锁类型，可以被设置为以下三种取值的其中一种
+ * PTHREAD_RWLOCK_PREFER_READER_NP: 默认值，读线程拥有更高优先级。当存在阻塞的写线程时，读线程仍然可以获得读写锁。只要不断有新的读线程，写线程将一直保持"饥饿"。
+ * PTHREAD_RWLOCK_PREFER_WRITER_NP: 写线程拥有更高优先级。这一选项被glibc忽略。
+ * PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP: 写线程拥有更高优先级，在当前系统环境下，它是有效的，将锁类型设置为该值以避免写饥饿。
+ * @return int 成功返回0，失败返回非零的错误码
+ */
+int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t *attr, int pref);

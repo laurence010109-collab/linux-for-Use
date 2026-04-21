@@ -12,6 +12,7 @@ void* read_thread(void*arg)
     //printf("%s try to read shared_data\n",(char*)arg);
     pthread_rwlock_rdlock(&rwlock);
     printf("%s read shared_data=%d\n",(char*)arg,shared_data);
+    sleep(3);
     pthread_rwlock_unlock(&rwlock);
     //printf("%s finish read shared_data\n",(char*)arg);
     return (void*)0;
@@ -29,11 +30,19 @@ void* write_thread(void* arg)
 }
 
 int main()
-{
+{   
+    pthread_rwlockattr_t attr;
+    pthread_rwlockattr_init(&attr);
+
+    pthread_rwlockattr_setkind_np(&attr,PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+    pthread_rwlock_init(&rwlock,&attr);
+    pthread_rwlockattr_destroy(&attr);
+
+
     pthread_t write1,write2,read1,read2,read3,read4,read5;
-    pthread_rwlock_init(&rwlock,NULL);
+    //pthread_rwlock_init(&rwlock,NULL);
+
     pthread_create(&write1,NULL,write_thread,"write1");
-    
     pthread_create(&read1,NULL,read_thread,"read1");
     pthread_create(&read2,NULL,read_thread,"read2");
     pthread_create(&read3,NULL,read_thread,"read3");
