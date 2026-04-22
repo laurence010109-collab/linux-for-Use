@@ -41,3 +41,31 @@ condition_var:condition_var.c
 	-$(CC) -o $@ $^ -lpthread
 	-./$@
 	-rm ./$@
+
+
+unnamed_sem_bin_thread_condition:unnamed_sem_bin_thread_condition.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+
+unnamed_sem_bin_thread:unnamed_sem_bin_thread.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+
+unnamed_sem_bin_process_condition:unnamed_sem_bin_process_condition.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+unnamed_sem_bin_process:unnamed_sem_bin_process.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+unnamed_sem_bin_process_isolate:unnamed_sem_bin_process_isolate.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@

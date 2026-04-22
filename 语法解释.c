@@ -291,3 +291,59 @@ int pthread_rwlockattr_init(pthread_rwlockattr_t *attr);
  * @return int 成功返回0，失败返回非零的错误码
  */
 int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t *attr, int pref);
+
+
+
+/**
+ * @brief 在sem指向的地址初始化一个无名信号量。
+ * 
+ * @param sem 信号量地址
+ * @param pshared 指明信号量是线程间共享还是进程间共享的
+ * 0: 信号量是线程间共享的，应该被置于所有线程均可见的地址（如，全局变量或在堆中动态分配的变量）
+ * 非0: 信号量是进程间共享的，应该被置于共享内存区域，任何进程只要能访问共享内存区域，即可操作进程间共享的信号量
+ * @param value 信号量的初始值
+ * @return int 成功返回0，失败返回-1，同时errno被设置以记录错误信息
+ */
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+
+
+
+/**
+ * 将文件映射到内存区域,进程可以直接对内存区域进行读写操作,就像操作普通内存一样,但实际上是对文件或设备进行读写,从而实现高效的 I/O 操作
+ * 
+ * void *addr: 指向期望映射的内存起始地址的指针,通常设为 NULL,让系统选择合适的地址
+ * size_t length: 要映射的内存区域的长度,以字节为单位
+ * int prot: 内存映射区域的保护标志,可以是以下标志的组合
+ *          (1) PROT_READ: 允许读取映射区域
+ *          (2) PROT_WRITE: 允许写入映射区域
+ *          (3) PROT_EXEC: 允许执行映射区域
+ *          (4) PROT_NONE: 页面不可访问
+ * int flags：映射选项标志
+ *          (1) MAP_SHARED: 映射区域是共享的,对映射区域的修改会影响文件和其他映射到同一区域的进程(一般使用共享)
+ *          (2) MAP_PRIVATE: 映射区域是私有的,对映射区域的修改不会影响原始文件,对文件的修改会被暂时保存在一个私有副本中
+ *          (3) MAP_ANONYMOUS: 创建一个匿名映射,不与任何文件关联
+ *          (4) MAP_FIXED: 强制映射到指定的地址,如果不允许映射,将返回错误
+ * int fd: 文件描述符,用于指定要映射的文件或设备,如果是匿名映射,则传入无效的文件描述符（例如-1）
+ * off_t offset: 从文件开头的偏移量,映射开始的位置
+ * return void*: (1) 成功时,返回映射区域的起始地址,可以像操作普通内存那样使用这个地址进行读写
+ *               (2) 如果出错,返回 (void *) -1,并且设置 errno 变量来表示错误原因
+ */
+void *mmap(void *addr, size_t length, int prot, int flags,
+
+
+/**
+ * @brief 返回一个 0-RAND_MAX 之间的伪随机数。当前机器环境下，RAND_MAX为int类型的最大值
+ * 
+ * @return int 伪随机数
+ */
+int rand(void);
+
+
+
+/**
+ * @brief 将seed设置为rand()生成随机数时使用的随机种子，
+    如果没有设置随机种子，rand()会自动将1作为随机种子
+ * 
+ * @param seed 随机种子
+ */
+void srand(unsigned int seed);
