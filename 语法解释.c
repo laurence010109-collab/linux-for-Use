@@ -331,13 +331,22 @@ int sem_init(sem_t *sem, int pshared, unsigned int value);
 void *mmap(void *addr, size_t length, int prot, int flags,
 
 
+
+/**
+ * @brief 返回以秒为单位的UNIX时间戳
+ * 
+ * @param tloc 记录时间的指针，如果不为NULL，则当前的UNIX秒级时间戳也会存在tloc指向的位置，否则不会存储。
+ * @return time_t 成功则返回以秒为单位的UNIX时间戳，失败则返回(time_t)-1
+ */
+time_t time(time_t *tloc);
+
+
 /**
  * @brief 返回一个 0-RAND_MAX 之间的伪随机数。当前机器环境下，RAND_MAX为int类型的最大值
  * 
  * @return int 伪随机数
  */
 int rand(void);
-
 
 
 /**

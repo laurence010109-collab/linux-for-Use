@@ -69,3 +69,15 @@ unnamed_sem_bin_process_isolate:unnamed_sem_bin_process_isolate.c
 	-$(CC) -o $@ $^ -lpthread
 	-./$@
 	-rm ./$@
+
+
+unnamed_sem_count_thread:unnamed_sem_count_thread.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+
+unnamed_sem_count_process:unnamed_sem_count_process.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
