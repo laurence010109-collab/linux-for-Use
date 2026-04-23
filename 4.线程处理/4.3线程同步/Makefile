@@ -81,3 +81,14 @@ unnamed_sem_count_process:unnamed_sem_count_process.c
 	-$(CC) -o $@ $^ -lpthread
 	-./$@
 	-rm ./$@
+
+named_sem_bin:named_sem_bin.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@
+
+
+thread_pool_test:thread_pool_test.c
+	-$(CC) -o $@ $^ -lpthread
+	-./$@
+	-rm ./$@

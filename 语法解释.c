@@ -356,3 +356,74 @@ int rand(void);
  * @param seed 随机种子
  */
 void srand(unsigned int seed);
+
+
+/**
+ * @brief 创建或打开一个已存在的POSIX有名信号量。
+ * 
+ * @param name 信号量的名称
+ * @param oflag 标记位，控制调用函数的行为。是一个或多个值或操作的结果。常用的是O_CREAT。
+ * O_CREAT: 如果信号量不存在则创建，指定了这个标记，必须提供mode和value
+ * @param mode 有名信号量在临时文件系统中对应文件的权限。需要注意的是，应确保每个需要访问当前有名信号量的进程都可以获得读写权限。
+ * @param value 信号量的初始值
+ * @return sem_t* 成功则返回创建的有名信号量的地址，失败则返回SEM_FAILED，同时设置errno以指出错误原因
+ */
+sem_t *sem_open(const char *name, int oflag,mode_t mode, unsigned int value);
+
+
+
+/**
+ * @brief 创建新的线程池
+ *
+ * @param func 池中线程执行的函数
+ * @param user_data 传递给func的数据，可以为NULL，这里的user_data最终会被存储在GThreadPool结构体的user_data属性中
+ * @param max_threads 线程池容量，即当前线程池中可以同时运行的线程数。-1表示没有限制
+ * @param exclusive 独占标记位。决定当前的线程池独占所有的线程还是与其它线程池共享这些线程。取值可以是TRUE或FALSE
+ *  TRUE：立即启动数量为max_threads的线程，且启动的线程只能被当前线程池使用
+ *  FALSE：只有在需要时，即需要执行任务时才创建线程，且线程可以被多个非独享资源的线程池共用
+ * @param error 用于报告错误信息，可以是NULL，表示忽略错误
+ * @return GThreadPool* 线程池实例指针。无论是否发生错误，都会返回有效的线程池
+ */
+GThreadPool *g_thread_pool_new(
+     GFunc func,
+    gpointer user_data,
+    gint max_threads,
+    gboolean exclusive,
+    GError **error);
+
+
+
+/**
+ * @brief 向pool指向的线程池实例添加数据，
+这一行为实际上会向任务队列添加新的任务。
+当存在可用线程时任务立即执行，否则任务数据会一直待在队列中，
+直至腾出可用线程执行任务
+ * @param pool 指向线程池实例的指针
+ * @param data 传递给每个任务的独享数据
+ * @param error 错误信息
+ * @return gboolean 成功返回TRUE，失败返回FALSE
+ */
+gboolean g_thread_pool_push(
+     GThreadPool *pool,
+     gpointer data,
+     GError **error);
+
+
+
+/**
+ * @brief 释放为pool指向的线程池分配的所有资源
+ * 
+ * @param pool 线程池指针
+ * @param immediate 是否立即释放线程池
+ *  TRUE：立即释放所有资源，未处理的数据不被处理
+ *  FALSE：在最后一个任务执行完毕之前，线程池不会被释放
+ *  需要注意的是：执行任务时，线程池的任何一个线程都不会被打断。无论这个参数是何取值，都可以保证至少线程池释放前正在运行的线程可以完成它们的任务。
+ * @param wait_ 当前函数是否阻塞等待所有任务完成
+ *  TRUE：所有需要处理的任务执行完毕当前函数才会返回
+ *  FALSE：当前函数立即返回
+ */
+void g_thread_pool_free (
+     GThreadPool* pool,
+     gboolean immediate,
+     gboolean wait_
+);
