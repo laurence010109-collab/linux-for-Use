@@ -443,3 +443,58 @@ void g_thread_pool_free (
             失败返回-1
     int execve (const char *__path, char *const __argv[], char *const __envp[]) 
     */
+
+
+
+
+
+send
+/**
+ * @brief 用于向另一个套接字传输消息。
+ * 
+ * @param sockfd 发送套接字的文件描述符。
+ * @param buf 发送缓冲区，并非操作系统分配为服务端和客户端分配的缓冲区，而是用户为了发送数据，自己维护的字节序列。const修饰表名它是“只读”的，即send函数不会修改这块内存的内容。
+ * @param len 要发送的数据的字节长度。它决定了从buf指向的缓冲区中将发送多少数据。
+ * @param flags flags 参数是以下标志之一或多个的按位或。对于大多数应用，这个参数被设置为0，表示不使用任何特殊行为。
+ *      MSG_CONFIRM 告知链路层发生了前进：您从另一端收到了成功的回复。如果链路层没有收到此消息，它将定期重新探测邻居（例如，通过单播 ARP）。仅对 SOCK_DGRAM 和 SOCK_RAW sockets 有效，当前仅对 IPv4 和 IPv6 实现。有关详情，请参阅 arp(7)。
+ *      MSG_DONTROUTE 不要使用网关发送报文段，只发送到直接连接的网络中的主机。通常仅由诊断或路由程序使用。仅为具有路由功能的协议族定义；报文段套接字不支持。
+ *      MSG_DONTWAIT 启用非阻塞操作；如果操作会阻塞，则返回 EAGAIN 或 EWOULDBLOCK。这提供了类似于设置 O_NONBLOCK 标志（通过 fcntl(2) F_SETFL 操作）的行为，但不同之处在于 MSG_DONTWAIT 是一个每次调用的选项，而 O_NONBLOCK 是对打开文件描述符（参见 open(2)）的设置，将影响调用进程中的所有线程以及持有引用相同打开文件描述符的其他进程。
+ *      MSG_EOR 终止记录（当支持此概念时，例如 SOCK_SEQPACKET 类型的套接字）。
+ *      MSG_MORE 调用方有更多数据要发送。此标志与 TCP sockets 一起使用，以获得与 TCP_CORK 套接字选项相同的效果（请参阅 tcp(7)），不同之处在于此标志可以基于每次调用设置。自 Linux 2.6 起，此标志还适用于 UDP sockets，并告知内核将使用此标志设置的所有调用发送的数据打包到单个数据报中，仅在执行不指定此标志的调用时才传输。（另请参阅 udp(7) 中描述的 UDP_CORK 套接字选项。）
+ *      MSG_NOSIGNAL 如果面向流的套接字的对等端关闭了连接，则不生成 SIGPIPE 信号。仍会返回 EPIPE 错误。这提供了类似于使用 sigaction(2) 忽略 SIGPIPE 的行为，但 MSG_NOSIGNAL 是每次调用的特性，而忽略 SIGPIPE 设置了一个影响进程中的所有线程的进程属性。
+ *      MSG_OOB 在支持此概念的套接字上发送带外数据（例如，类型为 SOCK_STREAM 的套接字）；底层协议还必须支持带外数据。
+ * @return ssize_t成功发送的字节数。如果出现错误，它将返回-1，并设置errno以指示错误的具体原因。
+ */
+ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+7）recv
+/**
+ * @brief 从套接字关联的连接中接收数据。
+ * 
+ * @param sockfd 套接字文件描述符。
+ * @param buf 接收缓冲区，同样地，此处也并非内核维护的缓冲区。
+ * @param len 缓冲区长度，即buf可以接收的最大字节数。
+ * @param flags flags 参数是以下标志之一或多个的按位或。对于大多数应用，这个参数被设置为0，表示不使用任何特殊行为。
+ *      MSG_DONTWAIT 启用非阻塞操作；如果操作会阻塞，则调用失败
+ *      MSG_ERRQUEUE 此标志指定应该从套接字错误队列中接收排队的错误。
+ *      MSG_OOB 此标志请求接收在正常数据流中不会接收到的带外数据。
+ *      MSG_PEEK 此标志导致接收操作从接收队列的开头返回数据，而不从队列中删除该数据。因此，后续的接收调用将返回相同的数据。
+ *      MSG_TRUNC 对于原始（AF_PACKET）、Internet 数据报、netlink和 UNIX 数据报套接字：返回报文段或数据报的实际长度，即使它比传递的缓冲区长。
+ *      MSG_WAITALL 此标志请求操作阻塞，直到满足完整的请求。
+ * @return ssize_t 返回接收到的字节数，如果连接已经正常关闭，返回值将是0。如果出现错误，返回-1，并且errno变量将被设置为指示错误的具体原因。
+ */
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+
+
+8）shutdown
+/**
+ * @brief关闭套接字的一部分或全部连接
+ * 
+ * @param sockfd 套接字文件描述符
+ * @param how 指定关闭的类型。其取值如下：
+ *      SHUT_RD：关闭读。之后，该套接字不再接收数据。任何当前阻塞在recv调用上的操作都将返回0，表示连接的另一端已经关闭。
+ *      SHUT_WR：关闭写。之后，试图通过该套接字发送数据将导致错误。如果使用此选项，TCP连接将发送一个FIN包给连接的对端，表明此方向上的数据传输已经完成。此时对端的recv调用将接收到0。
+ *      SHUT_RDWR：关闭读写。同时关闭套接字的读取和写入部分，等同于分别调用SHUT_RD和SHUT_WR。之后，该套接字既不能接收数据也不能发送数据。
+ * @return int 成功 0 
+ *             失败 -1，并设置errno变量以指示具体的错误原因。
+ */
+int shutdown(int sockfd, int how);

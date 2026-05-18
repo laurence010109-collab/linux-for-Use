@@ -18,11 +18,55 @@
 
 void* read_from_client(void* argv)
 {
+    int clientfd=*(int*)argv;
+    char *read_buf=NULL;
+    ssize_t count=0;
+    read_buf=malloc(sizeof(char)*1024);
+    if(read_buf==NULL)
+    {
+        perror("malloc");
+        return NULL;
+    }
+    while((count=recv(clientfd,read_buf,1024,0)))
+    {
+        if(count<0) perror("recv");
+
+        fputs(read_buf,stdout);
+    }
+    printf("客户端关闭了连接\n");
+    free(read_buf);
+    return NULL;
 
 }
 
 void* write_to_client(void* argv)
 {
+    int clientfd=*(int*)argv;
+    char*write_buf=NULL;
+    ssize_t send_count=0;
+
+
+    write_buf=malloc(sizeof(char)*1024);
+    if(write_buf==NULL)
+    {
+        printf("malloc");
+        shutdown(clientfd,SHUT_WR);
+        return NULL;
+    }
+
+    while(fgets(write_buf,1024,stdin)!=NULL)
+    {
+        send_count=send(clientfd,write_buf,1024,0);
+        if(send_count<0)
+        {
+            perror("send");
+        }
+    }
+
+    printf("服务器关闭了连接\n");
+    shutdown(clientfd,SHUT_WR);
+    free(write_buf);
+    return NULL;
 
 }
 
