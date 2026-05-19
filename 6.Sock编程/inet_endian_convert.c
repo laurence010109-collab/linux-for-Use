@@ -11,7 +11,7 @@
 int main()
 {
 
-    printf("132.18.8.8 的16进制表示为 0x%X 0x%X 0x%X 0x%X\n",132,18,8,8);
+    printf("10.18.138.14 的16进制表示为 0x%X 0x%X 0x%X 0x%X\n",132,18,8,8);
 
     // 数据结构
     struct sockaddr_in server_addr;

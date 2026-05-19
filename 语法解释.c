@@ -498,3 +498,26 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
  *             失败 -1，并设置errno变量以指示具体的错误原因。
  */
 int shutdown(int sockfd, int how);
+
+
+5）connect
+/**
+ * @brief 由客户端调用，来与服务端建立连接。
+ * 
+ * @param sockfd 客户端套接字的文件描述符
+ * @param addr 指向sockaddr结构体的指针，包含目的地地址信息
+ * @param addrlen 指定addr指向的结构体的大小
+ * @return int 成功 0 
+ *             失败 -1，并设置errno以指示错误原因
+ */
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+
+
+
+void *memset(void *str, int c, size_t n);
+
+    str（推土机起点）：这是你要推平的内存的首地址（也就是你用 malloc 申请到的那个指针，比如 read_buf）。
+
+    c（填埋物）：你要往地里填什么东西？通常我们填 0（彻底清零）。注意，虽然它的类型是 int，但在底层执行时，它会被极其死板地强行截断成 unsigned char（无符号单字节，0~255）！
+
+    n（施工面积）：推平多少个字节（Byte）？这里必须配合 sizeof 使用，绝对不能凭感觉写！
