@@ -16,3 +16,8 @@ single_conn_server: single_conn_server.c
 
 single_conn_client: single_conn_client.c
 	-$(CC) -o $@ $^
+
+without_buf_test: without_buf_test.c
+	-$(CC) -o $@ $^
+	-./$@
+	-rm ./$@
